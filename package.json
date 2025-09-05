@@ -1,0 +1,31 @@
+{
+  "name": "express-mastra-demo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@ai-sdk/openai": "^2.0.24",
+    "@mastra/core": "^0.16.0",
+    "@mastra/libsql": "^0.14.0",
+    "@mastra/memory": "^0.14.4",
+    "@opentelemetry/sdk-node": "^0.204.0",
+    "@opentelemetry/sdk-trace-base": "^2.1.0",
+    "braintrust": "^0.3.6",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.3.1",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  }
+}
