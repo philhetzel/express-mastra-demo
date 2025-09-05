@@ -1,9 +1,16 @@
 import { openai } from '@ai-sdk/openai';
+import { wrapLanguageModel } from 'ai';
 import { Agent } from '@mastra/core/agent';
 import { Memory } from '@mastra/memory';
 import { LibSQLStore } from '@mastra/libsql';
 import { weatherTool } from './tools/weather-tool';
 import { calculatorTool } from './tools/calculator-tool';
+import { BraintrustMiddleware, initLogger} from "braintrust";
+
+initLogger({
+  projectName: "your-project-name",
+  apiKey: process.env.BRAINTRUST_API_KEY,
+});
 
 export type DemoAgentRuntimeContext = {
   instructions?: string;
@@ -19,7 +26,10 @@ export const demoAgent = new Agent({
   instructions: async ({runtimeContext}) => {
     return runtimeContext?.get("instructions") as string ?? defaultInstructions;
   },
-  model: openai('gpt-4o-mini'),
+  model: wrapLanguageModel({
+    model: openai('gpt-4o-mini'),
+    middleware: BraintrustMiddleware({ debug: true, name: "MastraMiddleware" })
+  }),
   tools: { weatherTool, calculatorTool },
   memory: new Memory({
     storage: new LibSQLStore({
