@@ -1,7 +1,8 @@
 import { Mastra } from '@mastra/core/mastra';
 import { LibSQLStore } from '@mastra/libsql';
-import { demoAgent } from './agent';
 import * as dotenv from 'dotenv';
+import { BraintrustExporter } from '@mastra/braintrust';
+import { demoAgent } from './agent';
 
 // Load environment variables
 dotenv.config();
@@ -13,10 +14,22 @@ export const mastra = new Mastra({
     url: 'file:../mastra.db',
   }),
   telemetry: {
-    serviceName: "express-mastra-demo",
     enabled: true,
-    export: {
-      type: "otlp",
+  },
+  observability: {
+    instances: {
+      braintrust: {
+        serviceName: 'MastraAppTest',
+        exporters: [
+          new BraintrustExporter({
+            apiKey: process.env.BRAINTRUST_API_KEY ?? '',
+            logLevel: 'debug',
+            tuningParameters: {
+              projectName: 'MastraAppTest',
+            },
+          }),
+        ],
+      },
     },
   },
 });

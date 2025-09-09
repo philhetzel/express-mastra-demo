@@ -16,9 +16,7 @@ const defaultInstructions = `
 
 export const demoAgent = new Agent({
   name: 'Demo Assistant',
-  instructions: async ({runtimeContext}) => {
-    return runtimeContext?.get("instructions") as string ?? defaultInstructions;
-  },
+  instructions: defaultInstructions,
   model: openai('gpt-4o-mini'),
   tools: { weatherTool, calculatorTool },
   memory: new Memory({
