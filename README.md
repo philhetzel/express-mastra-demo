@@ -48,14 +48,25 @@ npx ts-node src/test-agent.ts
 To test the agent with full OpenTelemetry tracing to Braintrust:
 
 ```bash
-npx ts-node src/test-otel-express.ts
+npm run test:otel
 ```
 
 This will:
+- Load the custom instrumentation file automatically
 - Initialize OpenTelemetry with BraintrustSpanProcessor
 - Run three test scenarios (weather query, calculator, combined)
 - Send traces to your Braintrust project
 - Properly shutdown the telemetry system
+
+### Development Server
+
+To run the Express server with tracing enabled:
+
+```bash
+npm run dev
+```
+
+This starts the server on port 3000 with OpenTelemetry instrumentation active.
 
 ## Project Structure
 
@@ -64,10 +75,11 @@ src/
 ├── mastra/
 │   ├── agent.ts              # Main agent with V2 AI SDK model
 │   ├── index.ts              # Mastra configuration with telemetry
+│   ├── instrumentation.ts    # Custom OpenTelemetry instrumentation
 │   └── tools/
 │       ├── weather-tool.ts   # Real weather API tool
 │       └── calculator-tool.ts # Math operations tool
-├── tracing.ts                # OpenTelemetry initialization for Express
+├── index.ts                  # Express server entry point
 ├── test-agent.ts             # Basic agent testing
 └── test-otel-express.ts      # OpenTelemetry integration test
 ```
@@ -81,10 +93,11 @@ src/
 - Configured with proper telemetry export
 
 ### OpenTelemetry Integration
-- **BraintrustSpanProcessor** for Express applications
+- **Custom instrumentation file** (`src/mastra/instrumentation.ts`) following Mastra docs
+- **BraintrustSpanProcessor** for AI-specific tracing
 - Automatic trace collection from AI SDK calls
 - Proper span hierarchy and metadata
-- Graceful shutdown handling
+- Auto-instrumentation for Node.js with `@opentelemetry/auto-instrumentations-node`
 
 ### Tools
 - **Weather Tool**: Fetches real weather data from Open-Meteo API
@@ -109,5 +122,7 @@ Traces will show:
 ## Notes
 
 - This demo uses Express-specific OpenTelemetry setup (not Next.js)
-- Mastra is used as the agent framework
+- Custom instrumentation file follows [Mastra's tracing documentation](https://mastra.ai/docs/observability/tracing)
+- Instrumentation is automatically loaded via Node.js `--import` flag in npm scripts
 - The Mastra agent is using the V2 language models with `agent.generateVNext()` instead of `generate()`
+- Traces are sent to Braintrust using the BraintrustSpanProcessor
