@@ -14,23 +14,22 @@ export const mastra = new Mastra({
     url: 'file:../mastra.db',
   }),
   telemetry: {
-    enabled: true,
+    enabled: false, // Disable OTEL tracing since we're using AI Tracing
   },
   observability: {
-    instances: {
+    default: { enabled: false },
+    configs: {
       braintrust: {
-        serviceName: 'MastraAppTest',
+        serviceName: 'my-service',
         exporters: [
           new BraintrustExporter({
-            apiKey: process.env.BRAINTRUST_API_KEY ?? '',
-            logLevel: 'debug',
-            tuningParameters: {
-              projectName: 'MastraAppTest',
-            },
+            apiKey: process.env.BRAINTRUST_API_KEY,
+            projectName: process.env.BRAINTRUST_PROJECT_NAME,
           }),
         ],
       },
     },
+    configSelector: () => 'braintrust',
   },
 });
 

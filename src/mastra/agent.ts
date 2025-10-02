@@ -4,6 +4,8 @@ import { Memory } from '@mastra/memory';
 import { LibSQLStore } from '@mastra/libsql';
 import { weatherTool } from './tools/weather-tool';
 import { calculatorTool } from './tools/calculator-tool';
+import { wrapLanguageModel } from 'ai';
+import { BraintrustMiddleware } from 'braintrust';
 
 export type DemoAgentRuntimeContext = {
   instructions?: string;
@@ -17,7 +19,7 @@ const defaultInstructions = `
 export const demoAgent = new Agent({
   name: 'Demo Assistant',
   instructions: defaultInstructions,
-  model: openai('gpt-4o-mini'),
+  model: wrapLanguageModel({model: openai('gpt-4o-mini'), middleware: [BraintrustMiddleware()]}),
   tools: { weatherTool, calculatorTool },
   memory: new Memory({
     storage: new LibSQLStore({
